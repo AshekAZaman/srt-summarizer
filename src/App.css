@@ -1,0 +1,70 @@
+/* General Styling */
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+}
+
+/* Centering Content */
+.container {
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* Stack content vertically */
+  align-items: center; /* Center items horizontally */
+  gap: 30px; /* Add space between elements */
+}
+
+/* SRT Summarizer Heading */
+h1 {
+  margin-bottom: 20px; /* Space below the title */
+}
+
+/* Container for Search and File Upload (side by side) */
+.inputs-container {
+  display: flex; /* Arrange inputs side by side */
+  justify-content: center; /* Center them horizontally */
+  align-items: center; /* Align inputs vertically */
+  gap: 20px; /* Space between inputs */
+}
+
+/* Search Input and File Input */
+.search-input,
+.file-input {
+  width: 300px;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  background: #1e1e1e;
+  color: white;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effects */
+.search-input.focused {
+  width: 350px;
+  font-size: 18px;
+}
+
+.file-input.focused {
+  width: 350px;
+  font-size: 18px;
+}
+
+/* SRT Preview Box */
+.srt-preview {
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  max-width: 400px;
+  text-align: left;
+}
