@@ -1,0 +1,46 @@
+/* Search Results Page */
+
+/* Search Results Container */
+.search-results-container {
+    padding: 20px;  /* Adds space around the content */
+    text-align: center;
+    margin: 0 auto;  /* Centering the content */
+    max-width: 1200px;  /* Limit width of the container */
+  }
+  
+  .search-results-container h2 {
+    margin-bottom: 20px;
+  }
+  .movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  
+  .movie-item {
+    width: 95px;  /* Limit the width of each movie item */
+    text-align: center;
+    margin-bottom: 30px;  /* Add space between movie items */
+  }
+  
+  .movie-item img {
+    width: 100%;  /* Allow the image to scale within the container */
+    max-width: 200px;  /* Limit the size of the image */
+    height: auto;  /* Maintain the aspect ratio */
+    border-radius: 8px;
+  }
+  
+  
+  .movie-item h3 {
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  
+  
+  .movie-item p {
+    color: #555;
+  }
+  
+  

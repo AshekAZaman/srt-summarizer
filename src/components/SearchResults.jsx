@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom"; // Import Link
-// No need to import CSS since it's already in app.css
+import "./SearchResults.css";
 
 const SearchResults = () => {
   const location = useLocation();
