@@ -1,0 +1,59 @@
+/* Summarize.css */
+
+/* Basic container styling */
+.summarize-container {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+  
+  .summarize-container h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* The content preview area */
+  pre {
+    white-space: pre-wrap;  /* Wrap long lines */
+    word-wrap: break-word;
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto; /* Scrollable area */
+  }
+  
+  .summarize-container p {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .summarize-container .no-file {
+    font-style: italic;
+    color: #888;
+  }
+  
+  /* Optional: Style for any future summarization action (button, etc.) */
+  .summarize-action {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .summarize-action:hover {
+    background-color: #45a049;
+  }
+  

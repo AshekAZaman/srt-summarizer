@@ -23,7 +23,6 @@ function App() {
   return (
     <div className="container">
       <h1>SRT Summarizer</h1>
-
       <div className="inputs-container">
         <Search
           searchQuery={searchQuery}
@@ -32,9 +31,11 @@ function App() {
           navigate={navigate}
         />
         <p>OR</p>
-        <FileUpload setUploadedFile={setUploadedFile} setSrtContent={setSrtContent} />
+        <FileUpload
+          setUploadedFile={setUploadedFile}
+          setSrtContent={setSrtContent}
+        />
       </div>
-
       {uploadedFile && <p>Uploaded: {uploadedFile.name}</p>}
       {srtContent && <SrtPreview srtContent={srtContent} />}
       {error && <ErrorMessage error={error} />}
