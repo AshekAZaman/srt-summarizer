@@ -46,7 +46,6 @@ const MovieDetails = () => {
           }
         );
         if (response.data && response.data.data) {
-          // Filter only English subtitles and limit to 3 links
           const englishSubtitles = response.data.data
             .filter((sub) => sub.attributes.language === "en")
             .slice(0, 3);
@@ -125,9 +124,7 @@ const MovieDetails = () => {
             </ol>
             <ul>
               {subtitles.map((sub) => {
-                const subtitleLink = sub.attributes.url
-                  ? sub.attributes.url
-                  : `https://www.opensubtitles.com/en/subtitles/${sub.id}`;
+                const subtitleLink = `https://www.opensubtitles.com/en/subtitles/${sub.id}/buttons`; // Direct to the button page
                 return (
                   <li key={sub.id}>
                     <a
