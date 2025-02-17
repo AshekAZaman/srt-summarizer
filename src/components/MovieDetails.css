@@ -1,104 +1,232 @@
-/* Movie Details Page*/
+/* Global Dark Theme */
+body {
+  background-color: #121212; /* Black background for entire page */
+  color: #e1e1e1; /* Light grey text for contrast */
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
 
+/* Movie Details Container */
 .movie-details-container {
-    display: flex;
-    align-items: center; /* Center align content */
-    gap: 30px; /* Increase spacing */
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #1e293b, #334155); /* Modern gradient */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    color: #fff;
-  }
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #1e1e1e; /* Dark container background */
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Movie Details Section */
+.movie-details {
+  flex: 1;
+}
+
+/* Movie Header Section */
+.movie-header {
+  display: flex;
+  gap: 20px;
+}
+
+.movie-poster {
+  width: 250px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.movie-info {
+  flex: 1;
+}
+
+.movie-info h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #f1f1f1; /* White text */
+}
+
+.movie-info p {
+  font-size: 16px;
+  margin: 6px 0;
+  color: #a1a1a1; /* Light grey text for secondary info */
+}
+
+.movie-info strong {
+  color: #ffcc00; /* Yellow accent for important info */
+}
+
+.movie-description {
+  margin-top: 20px;
+}
+
+.movie-description h3 {
+  font-size: 22px;
+  color: #ffcc00; /* Yellow heading */
+}
+
+.movie-description p {
+  font-size: 16px;
+  color: #a1a1a1; /* Light grey description text */
+  line-height: 1.6;
+}
+
+/* Summarize Section - Emojis for Instructions and Bullet Points for Links */
+.summarize-details ol {
   
-  .movie-details-container img {
-    width: 280px;
-    height: auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-  }
-  
-  .movie-details-container img:hover {
-    transform: scale(1.05);
-  }
-  
-  .movie-info {
-    flex: 1;
-    display: flex;
+  list-style: none; /* Remove default numbering */
+  padding-left: 0; /* Remove default padding */
+}
+
+.summarize-details ol li {
+  margin: 6px 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.summarize-details ol li::before {
+  content: "✅"; /* Default emoji for each step */
+  margin-right: 10px;
+}
+
+/* Custom emojis for steps */
+.summarize-details ol li:nth-child(1)::before {
+  content: "📥"; /* Emoji for downloading */
+}
+
+.summarize-details ol li:nth-child(2)::before {
+  content: "💾"; /* Emoji for saving */
+}
+
+.summarize-details ol li:nth-child(3)::before {
+  content: "📂"; /* Emoji for uploading */
+}
+
+/* Bullet Points for Links */
+.summarize-details ul {
+  list-style-type: disc; /* Use bullet points */
+  padding-left: 20px; /* Add some padding to align bullets properly */
+}
+
+.summarize-details ul li {
+  margin: 6px 0;
+  font-size: 16px;
+  display: list-item; /* Ensure list items are displayed as list items */
+}
+
+.summarize-details ul li a {
+  color: #3399ff; /* Blue color for links */
+  text-decoration: none;
+}
+
+.summarize-details ul li a:hover {
+  text-decoration: underline; /* Underline on hover for links */
+}
+
+/* File Upload Section */
+/* Space between the two sections */
+.summarize-details > *:not(:last-child) {
+  margin-bottom: 30px; /* Add space below each section */
+}
+
+/* Box for the Upload Section */
+.upload-section {
+  background-color: #333333; /* Darker background for the box */
+  border-radius: 8px; /* Rounded corners */
+  padding: 20px; /* Inner spacing */
+  border: 1px solid #444; /* Subtle border */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+}
+
+/* Upload Section Heading */
+.upload-section-heading {
+  font-size: 24px;
+  color: #ffcc00; /* Yellow color */
+  margin-bottom: 16px;
+}
+
+/* Upload Section Paragraph */
+.upload-section p {
+  font-size: 18px;
+  color: #a1a1a1; /* Light grey text */
+  margin-bottom: 12px;
+}
+
+.upload-file-section {
+  background-color: #333333;
+  border-radius: 8px;
+  padding: 20px;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.upload-file-section h3 {
+  font-size: 24px;
+  color: #ffcc00;
+  margin-bottom: 16px;
+}
+
+.upload-file-section p {
+  font-size: 18px;
+  color: #a1a1a1;
+  margin-bottom: 12px;
+}
+
+/* File Input Styling */
+input[type="file"] {
+  padding: 12px;
+  margin-top: 10px;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  border: 1px solid #ffcc00; /* Yellow border */
+  background-color: #444; /* Dark background */
+  color: #fff; /* White text */
+  font-size: 16px;
+}
+
+/* Summarize Button Styling */
+.summarize-button {
+  padding: 12px 20px;
+  margin-top: 20px;
+  background-color: #ffcc00; /* Yellow background */
+  color: #121212; /* Black text */
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.summarize-button:disabled {
+  background-color: #a1a1a1; /* Grey background when disabled */
+  cursor: not-allowed;
+}
+
+.summarize-button:hover:not(:disabled) {
+  background-color: #e5a500; /* Darker yellow on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .movie-details-container {
     flex-direction: column;
-    gap: 12px;
+    text-align: center;
   }
-  
-  .movie-info h2 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #f8fafc;
+
+  .movie-header {
+    flex-direction: column;
   }
-  
-  .movie-info p {
-    font-size: 18px;
-    color: #cbd5e1;
-    margin: 6px 0;
+
+  .movie-poster {
+    width: 100%;
+    max-width: 250px;
   }
-  
-  .movie-info p strong {
-    color: #facc15; /* Gold for contrast */
+
+  .movie-info {
+    align-items: center;
   }
-  
-  @media (max-width: 768px) {
-    .movie-details-container {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-  
-    .movie-details-container img {
-      width: 100%;
-      max-width: 320px;
-    }
-  
-    .movie-info {
-      align-items: center;
-    }
-  }
-  
-  .subtitle-button {
-    margin-top: 15px;
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .subtitle-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .subtitle-results {
-    margin-top: 20px;
-  }
-  
-  .subtitle-results ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .subtitle-results li {
-    margin-bottom: 5px;
-  }
-  
-  .subtitle-results a {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .subtitle-results a:hover {
-    text-decoration: underline;
-  }
-  
+}

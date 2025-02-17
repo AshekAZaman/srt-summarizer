@@ -3,7 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./MovieDetails.css";
 
-const API_KEY = "GZyDgiglxWR498vYHj7gtuC5diFwxRBR";
+const OMDB_API_KEY = import.meta.env.VITE_OMDB_API_KEY;
+const OPENSUBTITLES_API_KEY = import.meta.env.VITE_OPENSUBTITLES_API_KEY;
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -19,18 +20,18 @@ const MovieDetails = () => {
     const fetchMovieDetails = async () => {
       try {
         const response = await axios.get(
-          `https://www.omdbapi.com/?i=${id}&apikey=1864fc7d`
+          `https://www.omdbapi.com/?i=${id}&apikey=${OMDB_API_KEY}`
         );
         if (response.data.Response === "True") {
           setMovie(response.data);
           fetchSubtitles(response.data.imdbID);
         } else {
-          setError("Movie details not found.");
+          throw new Error("Movie details not found.");
         }
       } catch (err) {
-        setError("Error fetching movie details.");
+        setError(err.message || "Error fetching movie details.");
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     const fetchSubtitles = async (imdbID) => {
@@ -39,30 +40,32 @@ const MovieDetails = () => {
           `https://api.opensubtitles.com/api/v1/subtitles?imdb_id=${imdbID}`,
           {
             headers: {
-              "Api-Key": API_KEY,
+              "Api-Key": OPENSUBTITLES_API_KEY,
               "Content-Type": "application/json",
               "User-Agent": "SRTSummarizer v1.0",
             },
           }
         );
-        if (response.data && response.data.data) {
-          const englishSubtitles = response.data.data
-            .filter((sub) => sub.attributes.language === "en")
-            .slice(0, 3);
-          setSubtitles(englishSubtitles);
+
+        if (response.data?.data) {
+          const englishSubtitles = response.data.data.filter(
+            (sub) => sub.attributes.language === "en"
+          );
+          setSubtitles(englishSubtitles.slice(0, 3));
         } else {
           setSubtitles([]);
         }
       } catch (err) {
         console.error("Error fetching subtitles:", err);
         setSubtitles([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchMovieDetails();
   }, [id]);
 
-  // Handle file upload: when a user uploads a subtitle file, we mark the state ready for summarization.
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -71,7 +74,6 @@ const MovieDetails = () => {
     }
   };
 
-  // When the user clicks "Start Summarizing", navigate to the Summarize page and pass the file via state.
   const handleSummarization = () => {
     if (uploadedFile) {
       navigate("/summarize", { state: { file: uploadedFile } });
@@ -85,80 +87,81 @@ const MovieDetails = () => {
   if (!movie) return <p>No movie data found.</p>;
 
   return (
-    <div className="movie-details-container">
-      <img src={movie.Poster} alt={movie.Title} />
+<div className="movie-details-container">
+  <div className="movie-details">
+    <div className="movie-header">
+      <img src={movie.Poster} alt={movie.Title} className="movie-poster" />
       <div className="movie-info">
-        <h2>
-          {movie.Title} ({movie.Year})
-        </h2>
-        <p>
-          <strong>Genre:</strong> {movie.Genre}
-        </p>
-        <p>
-          <strong>Director:</strong> {movie.Director}
-        </p>
-        <p>
-          <strong>Plot:</strong> {movie.Plot}
-        </p>
-        <p>
-          <strong>IMDB Rating:</strong> {movie.imdbRating}
-        </p>
-
-        {/* Subtitles Section */}
-        <h3>Get English Subtitles for Summarization</h3>
-        {subtitles.length > 0 ? (
-          <>
-            <p>
-              To obtain subtitles for this movie, follow these steps:
-            </p>
-            <ol>
-              <li>
-                Click on one of the subtitle links below to download the subtitle file.
-              </li>
-              <li>
-                Save the subtitle file on your device.
-              </li>
-              <li>
-                Upload the file using the uploader below to begin summarization.
-              </li>
-            </ol>
-            <ul>
-              {subtitles.map((sub) => {
-                const subtitleLink = `https://www.opensubtitles.com/en/subtitles/${sub.id}/buttons`; // Direct to the button page
-                return (
-                  <li key={sub.id}>
-                    <a
-                      href={subtitleLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {sub.attributes.release}
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </>
-        ) : (
-          <p>No English subtitles found.</p>
-        )}
-
-        {/* File Upload Section */}
-        <h3>Upload Subtitle File for Summarization</h3>
-        <p>
-          After downloading the subtitle file, please upload it below:
-        </p>
-        <input type="file" accept=".srt,.zip,.ssa" onChange={handleFileUpload} />
-        {uploadedFile && <p>✅ Uploaded: {uploadedFile.name}</p>}
-
-        {/* Summarization Button */}
-        {isReadyToSummarize && (
-          <button onClick={handleSummarization} className="summarize-button">
-            Start Summarizing
-          </button>
-        )}
-      </div>
+        <h2>{movie.Title} ({movie.Year})</h2>
+        <p><strong>Genre:</strong> {movie.Genre}</p>
+        <p><strong>Director:</strong> {movie.Director}</p>
+        <p><strong>Writer:</strong> {movie.Writer}</p>
+        <p><strong>Actors:</strong> {movie.Actors}</p>
+        <p><strong>IMDB Rating:</strong> {movie.imdbRating}</p>
+        <p><strong>IMDb Votes:</strong> {movie.imdbVotes}</p>
+        <p><strong>Rated:</strong> {movie.Rated}</p>
+        <p><strong>Runtime:</strong> {movie.Runtime}</p>
+       </div>
     </div>
+
+    <div className="movie-description">
+      <h3>Plot</h3>
+      <p>{movie.Plot}</p>
+    </div>
+
+ 
+  </div>
+
+  <div className="summarize-details">
+  <h3 className="upload-section-heading">Get English Subtitles for Summarization</h3>
+  {subtitles.length > 0 ? (
+    <>
+      <p>Follow these steps to obtain subtitles:</p>
+      <ol>
+        <li>Click on one of the links below to download a subtitle file.</li>
+        <li>Save the file on your device.</li>
+        <li>Upload it below for summarization.</li>
+      </ol>
+      <ul>
+        {subtitles.map((sub) => (
+          <li key={sub.id}>
+            <a
+              href={`https://www.opensubtitles.com/en/subtitles/${sub.id}/buttons`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {sub.attributes.release}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : (
+    <p>No English subtitles found.</p>
+  )}
+
+  {/* Upload Section with Box */}
+  <div className="upload-section">
+    <h3 className="upload-section-heading">Upload Subtitle File for Summarization</h3>
+    <input
+      type="file"
+      accept=".srt,.zip,.ssa,.vtt"
+      onChange={handleFileUpload}
+    />
+    {uploadedFile && <p>✅ Uploaded: {uploadedFile.name}</p>}
+
+    {isReadyToSummarize && (
+      <button
+        onClick={handleSummarization}
+        className="summarize-button"
+        disabled={!isReadyToSummarize}
+      >
+        Start Summarizing
+      </button>
+    )}
+  </div>
+</div>
+</div>
   );
 };
 

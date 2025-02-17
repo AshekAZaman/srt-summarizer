@@ -2,8 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 import Search from "./components/Search";
-import FileUpload from "./components/FileUpload";
-import SrtPreview from "./components/SrtPreview";
 import SearchResults from "./components/SearchResults";
 import ErrorMessage from "./components/ErrorMessage";
 
@@ -11,8 +9,8 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState([]);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [srtContent, setSrtContent] = useState("");
   const [error, setError] = useState(null);
+  const [isReadyToSummarize, setIsReadyToSummarize] = useState(false);
   const navigate = useNavigate();
 
   const handleSearchResults = (searchResults, errorMessage) => {
@@ -20,9 +18,32 @@ function App() {
     setError(errorMessage);
   };
 
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.type === "application/x-subrip" || file.name.endsWith(".zip") || file.name.endsWith(".ssa") || file.name.endsWith(".srt")) {
+        setUploadedFile(file);
+        setIsReadyToSummarize(true);
+      } else {
+        alert("🚫 Please upload a valid subtitle file (.srt, .zip, .ssa).");
+        setUploadedFile(null);
+        setIsReadyToSummarize(false);
+      }
+    }
+  };
+
+  const handleSummarization = () => {
+    if (uploadedFile) {
+      console.log("Navigating to /summarize with file:", uploadedFile);
+      navigate("/summarize", { state: { file: uploadedFile } });
+    } else {
+      alert("⚠️ Please upload a subtitle file first.");
+    }
+  };
+
   return (
     <div className="container">
-      <h1>SRT Summarizer</h1>
+      <h1>SRT Summarizer 🎥</h1>
       <div className="inputs-container">
         <Search
           searchQuery={searchQuery}
@@ -31,13 +52,21 @@ function App() {
           navigate={navigate}
         />
         <p>OR</p>
-        <FileUpload
-          setUploadedFile={setUploadedFile}
-          setSrtContent={setSrtContent}
+        <h3>Upload Subtitle File for Summarization 📄</h3>
+        <input
+          type="file"
+          accept=".srt,.zip,.ssa"
+          onChange={handleFileUpload}
         />
+        {uploadedFile && (
+          <p>✅ Uploaded: {uploadedFile.name}</p>
+        )}
+        {isReadyToSummarize && (
+          <button onClick={handleSummarization} className="summarize-button">
+            Start Summarizing 🔄
+          </button>
+        )}
       </div>
-      {uploadedFile && <p>Uploaded: {uploadedFile.name}</p>}
-      {srtContent && <SrtPreview srtContent={srtContent} />}
       {error && <ErrorMessage error={error} />}
       {results.length > 0 && <SearchResults results={results} />}
     </div>

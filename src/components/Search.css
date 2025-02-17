@@ -1,21 +1,68 @@
+/* General Search Styles */
 .search-container {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-  
-  .search-input {
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+/* Search Input */
+.search-input {
+  width: 300px;
+  padding: 12px;
+  border: 1px solid #666;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #121212; /* Black background */
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #aaa; /* Light grey placeholder */
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #FFD700; /* Yellow border */
+  box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.3); /* Yellow glow */
+}
+
+/* Search Button */
+.search-button {
+  padding: 12px 20px;
+  background-color: #FFD700; /* Yellow background */
+  color: #121212; /* Black text */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #FFCC00; /* Slightly darker yellow on hover */
+}
+
+.search-button:active {
+  background-color: #FFB800; /* Even darker yellow when clicked */
+}
+
 /* Hover Effects */
 .search-input.focused {
-    width: 350px;
-    font-size: 18px;
-    border-color: blue;
-    outline: none;
+  width: 350px;
+  font-size: 18px;
+  border-color: #FFD700; /* Yellow focus border */
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
   }
+
+  .search-input {
+    width: 80%;
+  }
+}
