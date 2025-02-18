@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://AshekAZaman.github.io/srt-summarizer",
+  "homepage": "https://AshekAZaman.github.io/srt-summarizer/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

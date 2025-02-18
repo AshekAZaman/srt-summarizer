@@ -1,11 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom"; // HashRouter, no basename, no redirect
 import "./index.css";
 import App from "./App.jsx";
-import SearchResults from "./components/SearchResults.jsx"; 
+import SearchResults from "./components/SearchResults.jsx";
 import MovieDetails from "./components/MovieDetails.jsx";
 import Summarize from "./components/Summarize.jsx";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
