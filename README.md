@@ -2,8 +2,6 @@
 
 🎬 **SRT Summarizer** is a web app that allows users to search for movies, download subtitles, and summarize them using AI. The app utilizes the **OMDB API** for movie search, **Opensubtitles API** for subtitle retrieval, and **Gemini API** for summarizing the subtitles.
 
-🔗 **Live Demo**: [SRT Summarizer](https://ashekazaman.github.io/srt-summarizer/)
-
 ## Features
 
 - **Movie Search**: Search for movies by title and view details including genre, director, actors, and plot.
