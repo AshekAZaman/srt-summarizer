@@ -43,7 +43,10 @@ function App() {
 
   return (
     <div className="container">
-      <h1>SRT Summarizer 🎥</h1>
+      <h1 onClick={() => window.location.reload()} style={{ cursor: "pointer" }}>
+        SRT Summarizer 🎥
+      </h1>
+
       <div className="inputs-container">
         <Search
           searchQuery={searchQuery}
@@ -69,6 +72,20 @@ function App() {
       </div>
       {error && <ErrorMessage error={error} />}
       {results.length > 0 && <SearchResults results={results} />}
+
+      <footer className="footer">
+  <div className="footer-content">
+    <p className="footer-text">From <span className="highlight">Ashek A Zaman</span></p>
+    <div className="social-links">
+      <a href="https://www.linkedin.com/in/ashekazaman/" target="_blank" rel="noopener noreferrer">
+        <i className="fab fa-linkedin"></i> LinkedIn
+      </a>
+      <a href="https://github.com/AshekAZaman" target="_blank" rel="noopener noreferrer">
+        <i className="fab fa-github"></i> GitHub
+      </a>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }

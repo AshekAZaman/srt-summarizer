@@ -23,6 +23,7 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   font-family: 'Inter', system-ui, sans-serif;
   color: var(--text-primary);
+  position: relative;
 }
 
 .header {
@@ -128,11 +129,49 @@
   background: #ff8000;
 }
 
-.error-message {
-  color: var(--error-color);
-  font-size: 1.2rem;
-  margin-top: 20px;
+/* ⚡ Left-aligned Suggested Prompts */
+.suggested-prompts {
+  position: absolute;
+  left: -220px; /* Adjust based on layout */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  background: var(--background);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.suggested-prompts p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+  font-weight: bold;
   text-align: center;
+}
+
+.prompt-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.prompt-btn {
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 0.8rem;
+  background: var(--primary); /* Yellow */
+  color: black;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.prompt-btn:hover {
+  background: #ff8000; /* Darker orange */
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {

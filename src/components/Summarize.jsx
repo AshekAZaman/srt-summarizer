@@ -4,12 +4,15 @@ import "./Summarize.css";
 
 const Summarize = () => {
   const location = useLocation();
+  const chatEndRef = useRef(null);
+
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [chat, setChat] = useState([]);
   const [question, setQuestion] = useState("");
-  const chatEndRef = useRef(null);
+  const [isChatVisible, setIsChatVisible] = useState(false);
+  const [suggestedPrompts, setSuggestedPrompts] = useState([]); // State for dynamic prompts
 
   const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
   const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
@@ -17,9 +20,7 @@ const Summarize = () => {
   useEffect(() => {
     if (location.state?.file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        summarizeContent(e.target.result);
-      };
+      reader.onload = (e) => summarizeContent(e.target.result);
       reader.readAsText(location.state.file);
     }
   }, [location.state?.file]);
@@ -28,113 +29,143 @@ const Summarize = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat]);
 
-  const summarizeContent = async (content) => {
-    setLoading(true);
-    setError("");
+  const fetchAIResponse = async (prompt) => {
+    try {
+      // First, fetch response based on the subtitle
+      const subtitleResponse = await fetch(GEMINI_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+        }),
+      });
+      
+      const subtitleResult = await subtitleResponse.json();
+      let subtitleAnswer = subtitleResult?.candidates?.[0]?.content?.parts?.[0]?.text || "No response available.";
+  
+      // If subtitle-based answer seems insufficient, fetch additional context from the web
+      if (subtitleAnswer.includes("I don't have enough information")) {
+        const webPrompt = `Find relevant information about: ${prompt}`;
+        const webResponse = await fetch(GEMINI_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: webPrompt }] }],
+          }),
+        });
+  
+        const webResult = await webResponse.json();
+        const webAnswer = webResult?.candidates?.[0]?.content?.parts?.[0]?.text || "No additional information found.";
+  
+        return `${subtitleAnswer}\n\nAdditional context from the web: ${webAnswer}`;
+      }
+  
+      return subtitleAnswer;
+    } catch {
+      return "⚠️ An error occurred. Please try again later.";
+    }
+  };
+  
 
+  const summarizeContent = async (content) => {
     if (!content.trim()) {
       setError("⚠️ The file content is empty.");
-      setLoading(false);
       return;
     }
+    setLoading(true);
+    setError("");
+    setIsChatVisible(false);
 
-    try {
-      const response = await fetch(GEMINI_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Summarize this movie subtitle:\n${content}` }] }],
-        }),
-      });
+    const summaryText = await fetchAIResponse(`Summarize this movie subtitle:\n${content}`);
+    setSummary(summaryText);
+    setChat([{ role: "bot", text: summaryText }]);
+    setLoading(false);
+    setIsChatVisible(true);
 
-      const result = await response.json();
-      const summaryText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "📝 No summary available.";
-      setSummary(summaryText);
-      setChat([{ role: "bot", text: summaryText }]);
-    } catch (err) {
-      setError("⚠️ Failed to summarize content. Try again later.");
-    } finally {
-      setLoading(false);
-    }
+    // Generate suggested prompts based on the summary
+    generateSuggestedPrompts(summaryText);
   };
 
-  const askQuestion = async () => {
-    if (!question.trim()) return;
+  const generateSuggestedPrompts = async (summary) => {
+    const prompt = `Generate 5 relevant questions based on this movie summary and keep them short and don't number them:\n${summary}`;
+    const promptsText = await fetchAIResponse(prompt);
+    const promptsArray = promptsText.split("\n").filter((p) => p.trim()); // Split into array and remove empty lines
+    setSuggestedPrompts(promptsArray);
+  };
 
-    const newChat = [...chat, { role: "user", text: question }];
+  const askQuestion = async (query) => {
+    if (!query.trim()) return;
+  
+    const newChat = [...chat, { role: "user", text: query }];
     setChat(newChat);
     setQuestion("");
-
-    try {
-      const response = await fetch(GEMINI_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Based on the summary:\n${summary}\n\nUser question: ${question}` }] }],
-        }),
-      });
-
-      const result = await response.json();
-      const answerText = result?.candidates?.[0]?.content?.parts?.[0]?.text || "💬 No answer available.";
-      setChat([...newChat, { role: "bot", text: answerText }]);
-    } catch (err) {
-      setChat([...newChat, { role: "bot", text: "⚠️ Failed to get an answer. Try again later." }]);
-    }
+  
+    const answerText = await fetchAIResponse(`Provide an answer based on the available subtitle data. If the subtitle lacks information, supplement with reliable web sources. Keep responses relevant, polite, and avoid repetition.
+  
+  Subtitle Data: ${summary}
+  
+  User question: ${query}`);
+  
+    // Format response to bold words wrapped in **
+    const formattedAnswer = answerText.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+  
+    setChat([...newChat, { role: "bot", text: formattedAnswer }]);
   };
-
+  
   return (
     <div className="summarize-container">
-      <div className="header">
+      <header>
         <h1>🎬 Movie AI Assistant</h1>
-        <p>Ask anything about the movie plot! 🎥</p>
-      </div>
+        <p>Grab some popcorn! 🍿</p>
+      </header>
 
-      {loading && (
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Analyzing subtitles...</p>
-        </div>
-      )}
+      {loading && <div className="loading">🔄 Analyzing subtitles...</div>}
+      {error && <div className="error">{error}</div>}
 
-      {error && (
-        <div className="error-message">
-          {error}
-        </div>
-      )}
+      {isChatVisible && (
+        <>
+          <div className="chat-window">
+            {chat.map((msg, index) => (
+              <div key={index} className={`message ${msg.role}`}>
+  <div className="message-content">
+    {msg.role === "bot" && <span className="ai-marker">🤖</span>}
+    <p
+      className="text-bubble"
+      dangerouslySetInnerHTML={{ __html: msg.text }}
+    ></p>
+  </div>
+</div>
+            ))}
+            <div ref={chatEndRef} />
+          </div>
 
-      <div className="chat-window">
-        {chat.map((message, index) => (
-          <div key={index} className={`message ${message.role}`}>
-            <div className="message-content">
-              {message.role === 'bot' && <div className="ai-marker">🤖</div>}
-              <div className="text-bubble">
-                {message.text}
-              </div>
+          {/* Suggested Prompts */}
+          <div className="suggested-prompts">
+            <p>🔎 Suggested questions:</p>
+            <div className="prompt-buttons">
+              {suggestedPrompts.map((prompt, index) => (
+                <button key={index} onClick={() => askQuestion(prompt)} className="prompt-btn">
+                  {prompt}
+                </button>
+              ))}
             </div>
           </div>
-        ))}
-        <div ref={chatEndRef} />
-      </div>
 
-      <div className="input-area">
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask your question here... 💬"
-          onKeyPress={(e) => e.key === 'Enter' && askQuestion()}
-        />
-        <button onClick={askQuestion} disabled={!question.trim()}>
-          <span>Send 🚀</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-            <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-          </svg>
-        </button>
-      </div>
+          <div className="input-area">
+            <input
+              type="text"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Ask your question here... 💬"
+              onKeyPress={(e) => e.key === "Enter" && !loading && askQuestion(question)}
+              disabled={loading}
+            />
+            <button onClick={() => askQuestion(question)} disabled={!question.trim() || loading}>
+              <span>Send 🚀</span>
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
