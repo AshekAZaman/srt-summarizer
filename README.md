@@ -29,15 +29,7 @@
 - **Vite**: Fast build tool for React.
 - **Axios**: For making API requests.
 - **React Router**: For navigation between pages.
-
-## Contributing
-
-Feel free to fork the project, open issues, or submit pull requests. Contributions are welcome!
-
-## License
-
-This project is created for fun and personal use. No license is currently provided.
-
+  
 ---
 
 Thank you for using **SRT Summarizer**! 🎬
